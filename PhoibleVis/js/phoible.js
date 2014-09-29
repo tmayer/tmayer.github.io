@@ -242,7 +242,7 @@ function brushed(p) {
 
 
 //############### get information about features for drowdown menu ###############
-d3.tsv('https://rawgithub.com/phoible/phoible/master/phoible-phonemes.tsv').get(function (err, results){
+d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-phonemes.tsv').get(function (err, results){
 
 
 	results.forEach(function(a){
@@ -324,7 +324,7 @@ function loaddata(feature){
 	};
 
 	// get feature values from feature file
-	d3.tsv('https://rawgithub.com/phoible/phoible/master/phoible-aggregated.tsv').get(function (err, langdata) {
+	d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-aggregated.tsv').get(function (err, langdata) {
 
 
 		/*
