@@ -1,4 +1,4 @@
-WALS Visualization
+PHOIBLE Visualization
 ===================
 
 
