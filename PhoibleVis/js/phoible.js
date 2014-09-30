@@ -410,7 +410,7 @@ function loaddata(feature){
 
 				d3.selectAll('.sun')
 					.style('fill',function(e){
-						return e.children ? '#ccc' : groupScale(langByValue[e.name]);
+						return e.children ? '#ccc' : lang2phonemes[d.LanguageCode].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 					})
 				;
 
