@@ -45,6 +45,7 @@ var featurenames;
 var fam2macro = {};	
 var phonFreq = {};
 var lang2phonemes = {};
+var feature = startFeature;
 
 //############### projection settings ###############
 var margin = {top: 10, left: 10, bottom: 80, right: 10}
@@ -178,7 +179,7 @@ var brush = d3.svg.brush()
 
 function brushed2(){
 		if(brush.empty()){
-			selLanguages = catSelection;
+			selLanguages = allLanguages;
 		}
 		else{
 
@@ -188,17 +189,15 @@ function brushed2(){
 			  d3.selectAll(".location").classed('brushhidden',function(d){
 					//console.log(d);
 					//return false;
-					if( e[0][0] > projection([d.longitude,d.latitude])[0]
-								|| projection([d.longitude,d.latitude])[0] > e[1][0]
-						|| e[0][1] > projection([d.longitude,d.latitude])[1]
-								|| projection([d.longitude,d.latitude])[1] > e[1][1]){
+					if( e[0][0] > projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[0]
+								|| projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[0] > e[1][0]
+						|| e[0][1] > projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[1]
+								|| projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[1] > e[1][1]){
 
 						return true;
 					}
 					else{
-						if(featureSet[d.value.split(',')[0]] == 1){
-							selLanguages.push(d);
-						}
+						selLanguages.push(d);
 						return false;
 					}
 			  });
@@ -211,7 +210,7 @@ function brushed(p) {
   var e = brush.extent();
   if(brush.empty()){
 	d3.selectAll(".location").classed('brushhidden', false);
-	selLanguages = catSelection;
+	selLanguages = allLanguages;
 	d3.select('#sunburst svg').remove();
 	sunburst(selLanguages);
   }
@@ -220,17 +219,15 @@ function brushed(p) {
 	  d3.selectAll(".location").classed('brushhidden',function(d){
 			//console.log(d);
 			//return false;
-			if( e[0][0] > projection([d.longitude,d.latitude])[0]
-						|| projection([d.longitude,d.latitude])[0] > e[1][0]
-				|| e[0][1] > projection([d.longitude,d.latitude])[1]
-						|| projection([d.longitude,d.latitude])[1] > e[1][1]){
+			if( e[0][0] > projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[0]
+						|| projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[0] > e[1][0]
+				|| e[0][1] > projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[1]
+						|| projection([d.Longitude.replace(':','.'),d.Latitude.replace(':','.')])[1] > e[1][1]){
 
 				return true;
 			}
 			else{
-				if(featureSet[d.value.split(',')[0]] == 1){
-					selLanguages.push(d);
-				}
+				selLanguages.push(d);
 				return false;
 			}
 	  });
@@ -378,7 +375,7 @@ function loaddata(feature){
 
 
 				// sunburst interaction
-				dname = d.name;
+				dname = d.LanguageCode;
 				if(dname in langByFam){
 					d3.selectAll('.sun_fam_' + langByFam[dname].replace(/[-\s]/g,'_'))
 							.style('fill','#444')
@@ -410,7 +407,7 @@ function loaddata(feature){
 
 				d3.selectAll('.sun')
 					.style('fill',function(e){
-						return e.children ? '#ccc' : lang2phonemes[d.LanguageCode].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+						return e.children ? '#ccc' : lang2phonemes[e.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 					})
 				;
 
@@ -568,7 +565,8 @@ function sunburst(languagedata){
 			  .style("stroke", "#fff")
 		      .style("fill", function(d) {
 		      	//return color((d.children ? d : d.parent).name);
-		      	return d.name == "root" ? "#999" : d.children ? "#ccc" : "FireBrick";
+		      	//console.log(d);
+		      	return d.children ? '#ccc' : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 		      })
 			  .style("fill-rule", "evenodd")
 			  .on('mouseover',function(d){
@@ -600,7 +598,7 @@ function sunburst(languagedata){
 
 				d3.selectAll('.sun_' + d.name.replace(/[-\s]/g,'_'))
 					.style('fill',function(d){
-						return d.children ? '#444' : "FireBrick";
+						return d.children ? '#444' : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 					})
 					;
 
@@ -647,7 +645,7 @@ function sunburst(languagedata){
 
 					$(".infoicon")
 						.css("color",function(){
-							return d.children ? "#444" : "FireBrick";
+							return d.children ? "#444" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 						})
 						.css("display","inline")
 						;
@@ -673,7 +671,7 @@ function sunburst(languagedata){
 
 				d3.selectAll('.sun')
 					.style('fill',function(d){
-						return d.name == "root" ? "#999" : d.children ? "#ccc" : "FireBrick";
+						return d.name == "root" ? "#999" : d.children ? "#ccc" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 					})
 				;
 
@@ -756,7 +754,7 @@ $('.selectpickerScale').on('change',function(){
 	d3.selectAll('.sun')
 		.transition().duration(1000)
 		.style('fill',function(d){
-			return d.name == "root" ? "#999" : d.children ? "#ccc" : groupScale(langByValue[d.name]);
+			return d.name == "root" ? "#999" : d.children ? "#ccc" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
 		});
 
 	// legend dots
