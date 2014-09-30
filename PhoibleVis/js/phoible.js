@@ -242,9 +242,10 @@ function brushed(p) {
 
 
 //############### get information about features for drowdown menu ###############
-d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-phonemes.tsv').get(function (err, results){
+d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 
 
+	/* get the most frequent phonemes for the dropdown menu */
 	results.forEach(function(a){
 		if(a.Phoneme in phonFreq){
 			phonFreq[a.Phoneme] += 1;
@@ -273,7 +274,7 @@ d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-phonemes.tsv').get(fun
 	}
 
 	
-
+	/* feed the dropdown with the most frequent phonemes */
 	var select = document.getElementById("features");
 	freqPhonemes.forEach(function(a){
 			//featureByName[a.PhonemeID] = a.Phoneme;
@@ -300,17 +301,11 @@ d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-phonemes.tsv').get(fun
       width: 200//'auto'
   	});
 	
-});
+}); /* end load phoneme data */
 
 
 //############### load data ###############
 function loaddata(feature){
-// load data
-	//console.log(url);
-	currfeature = feature;
-
-	d3.select("#legendname").text(feature);
-	d3.select("#legendlink").attr('href',"http://wals.info/feature/" + feature);
 
 	var nodeCircles = g.append('g').attr('class','nodeCircles');
 	langByValue = {};
@@ -323,8 +318,8 @@ function loaddata(feature){
 	  });
 	};
 
-	// get feature values from feature file
-	d3.tsv('https://rawgit.com/phoible/phoible/master/phoible-aggregated.tsv').get(function (err, langdata) {
+	/* get language information from aggregated file */
+	d3.tsv('data/phoible-aggregated.tsv').get(function (err, langdata) {
 
 
 		/*
@@ -335,7 +330,6 @@ function loaddata(feature){
 		allLanguages = langdata;
 		catSelection = allLanguages;
 
-		
 
 		//############### plot locations ###############
 		nodeCircles.selectAll("path")
@@ -348,7 +342,7 @@ function loaddata(feature){
 					+ ", " + d['Country'] + "";
 				return 'location loc_' + d['LanguageCode'] +
 					" loc_gen_" + d['LanguageFamilyGenus'].replace(/[-\s]/g,'_') + 
-					" loc_con_" + fam2macro[d.Area.replace(/[-\s]/g,'_')];
+					" loc_con_" + d.Area.replace(/[-\s]/g,'_');
 			})
 			.attr('cx',function(d){
 				//console.log(d.Longitude,d.Latitude)
@@ -384,7 +378,7 @@ function loaddata(feature){
 
 
 				// sunburst interaction
-				dname = d['LanguageCode'];
+				dname = d.name;
 				if(dname in langByFam){
 					d3.selectAll('.sun_fam_' + langByFam[dname].replace(/[-\s]/g,'_'))
 							.style('fill','#444')
@@ -428,20 +422,18 @@ function loaddata(feature){
 
 		brushed2();
 
-
-		
-
-
+		/* call sunburst generation */
 		sunburst(selLanguages);
 
 	});
 
 
 
-};
+}; /* end loading language data */
 
 overall.append("g").attr("class","brush").call(brush);
 
+/* Sunburst creation */
 function sunburst(languagedata){
 
 		//############### construct genealogy ###############
@@ -456,12 +448,11 @@ function sunburst(languagedata){
 		langByCont = {};
 		famByCont = {};
 		genByCont = {};
+
 		languagedata.forEach(function(d){
-			//console.log(d);
-			//langByGenFamily[d['wals code']] = [d.family,d.genus];
 			d.family in upperByLower ? upperByLower[d.LanguageFamilyGenus].push(d.LanguageFamilyGenus) : upperByLower[d.LanguageFamilyGenus] = [d.LanguageFamilyGenus];
 			d.genus in upperByLower ? upperByLower[d.LanguageFamilyGenus].push(d['LanguageCode']) : upperByLower[d.LanguageFamilyGenus] = [d['LanguageCode']];
-			var currcont = fam2macro[d.Area];
+			var currcont = d.Area;
 			contByFam[currcont] = d.LanguageFamilyGenus;
 
 			langByCont[d['LanguageCode']] = currcont;
@@ -582,9 +573,10 @@ function sunburst(languagedata){
 			  .style("fill-rule", "evenodd")
 			  .on('mouseover',function(d){
 				//console.log(d);
+
 				d3.selectAll('.location').classed('hidden',true);
 
-				d3.selectAll(".loc_" + d.LanguageCode)
+				d3.selectAll(".loc_" + d.name)
 					.attr('r',function(){
 						return radSmall/scaleFactor;
 					})
@@ -594,15 +586,15 @@ function sunburst(languagedata){
 					.classed('hidden',false)
 					;
 
-				var sel = d3.select(".loc_" + d.LanguageCode);
+				var sel = d3.select(".loc_" + d.name);
 				sel.moveToFront();
 
 
 				if(d.name.length == 3){
-					outname = walsByInfo[d.LanguageCode];
+					outname = walsByInfo[d.name];
 				}
 				else{
-					outname = d.LanguageCode.substring(4);
+					outname = d.name.substring(4);
 				}
 
 
@@ -614,17 +606,17 @@ function sunburst(languagedata){
 
 				//console.log(d.name,langByFam[d.name],langByGen[d.name],genByFam[d.name]);
 				if(d.name in langByCont){
-					d3.selectAll('.sun_con_' + langByCont[d.LanguageCode].replace(/[-\s]/g,'_'))
+					d3.selectAll('.sun_con_' + langByCont[d.name].replace(/[-\s]/g,'_'))
 						.style('fill','#444')
 					;
 				}
 				if(d.name in langByFam){
-					d3.selectAll('.sun_fam_' + langByFam[d.LanguageCode].replace(/[-\s]/g,'_'))
+					d3.selectAll('.sun_fam_' + langByFam[d.name].replace(/[-\s]/g,'_'))
 							.style('fill','#444')
 						;
 				}
 				if(d.name in langByGen){
-					d3.selectAll('.sun_gen_' + langByGen[d.LanguageCode].replace(/[-\s]/g,'_'))
+					d3.selectAll('.sun_gen_' + langByGen[d.name].replace(/[-\s]/g,'_'))
 							.style('fill','#444')
 						;
 				}
