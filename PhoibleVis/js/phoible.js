@@ -270,6 +270,8 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 		}
 	}
 
+	freqPhonemes = freqPhonemes.sort();
+
 	
 	/* feed the dropdown with the most frequent phonemes */
 	var select = document.getElementById("features");
@@ -337,7 +339,7 @@ function loaddata(feature){
 				walsByInfo[d['LanguageCode']] = d['LanguageName'] + " [" + d['LanguageCode'] + "] "
 					+ d['LanguageFamilyGenus']
 					+ ", " + d['Country'] + "";
-				return 'location loc_' + d['LanguageCode'] +
+				return 'location loc_' + d['LanguageCode'] + " loc_fam_" + d["LanguageFamilyRoot"].replace(/[-\s]/g,'_') + 
 					" loc_gen_" + d['LanguageFamilyGenus'].replace(/[-\s]/g,'_') + 
 					" loc_con_" + d.Area.replace(/[-\s]/g,'_');
 			})
@@ -447,40 +449,40 @@ function sunburst(languagedata){
 		genByCont = {};
 
 		languagedata.forEach(function(d){
-			d.family in upperByLower ? upperByLower[d.LanguageFamilyGenus].push(d.LanguageFamilyGenus) : upperByLower[d.LanguageFamilyGenus] = [d.LanguageFamilyGenus];
+			d.family in upperByLower ? upperByLower[d.LanguageFamilyRoot].push(d.LanguageFamilyGenus) : upperByLower[d.LanguageFamilyRoot] = [d.LanguageFamilyGenus];
 			d.genus in upperByLower ? upperByLower[d.LanguageFamilyGenus].push(d['LanguageCode']) : upperByLower[d.LanguageFamilyGenus] = [d['LanguageCode']];
 			var currcont = d.Area;
 			contByFam[currcont] = d.LanguageFamilyGenus;
 
 			langByCont[d['LanguageCode']] = currcont;
 			langByGen[d['LanguageCode']] = d.LanguageFamilyGenus;
-			langByFam[d['LanguageCode']] = d.LanguageFamilyGenus;
-			genByFam[d.LanguageFamilyGenus] = d.LanguageFamilyGenus;
-			famByCont[d.LanguageFamilyGenus] = currcont;
+			langByFam[d['LanguageCode']] = d.LanguageFamilyRoot;
+			genByFam[d.LanguageFamilyGenus] = d.LanguageFamilyRoot;
+			famByCont[d.LanguageFamilyRoot] = currcont;
 			genByCont[d.LanguageFamilyGenus] = currcont;
 
 			if(continents[currcont]){
-				if(continents[currcont][d.LanguageFamilyGenus]){
-					if(continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus]){
-						continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus].push(d['LanguageCode']);
+				if(continents[currcont][d.LanguageFamilyRoot]){
+					if(continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus]){
+						continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus].push(d['LanguageCode']);
 					}
 					else{ // genus not in family yet
-						continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus] = [];
-						continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus].push(d['LanguageCode']);
+						continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus] = [];
+						continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus].push(d['LanguageCode']);
 					}
 				}
 				else{ // family not in continent yet
-					continents[currcont][d.LanguageFamilyGenus] = {};
-					continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus] = [];
-					continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus].push(d['LanguageCode']);
+					continents[currcont][d.LanguageFamilyRoot] = {};
+					continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus] = [];
+					continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus].push(d['LanguageCode']);
 				}
 
 			}
 			else{ // continent not yet available
 				continents[currcont] = {};
-				continents[currcont][d.LanguageFamilyGenus] = {};
-				continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus] = [];
-				continents[currcont][d.LanguageFamilyGenus][d.LanguageFamilyGenus].push(d['LanguageCode']);
+				continents[currcont][d.LanguageFamilyRoot] = {};
+				continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus] = [];
+				continents[currcont][d.LanguageFamilyRoot][d.LanguageFamilyGenus].push(d['LanguageCode']);
 			}
 
 
