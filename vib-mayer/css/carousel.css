@@ -145,6 +145,10 @@ body {
   }
 }
 
+.featurette-heading {
+  margin-top: 30px;
+}
+
 @media (min-width: 992px) {
   .featurette-heading {
     margin-top: 60px;
