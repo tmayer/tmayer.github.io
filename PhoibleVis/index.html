@@ -73,7 +73,7 @@
 
                                     <i class="fa fa-warning"></i>
                                     <h3 class="box-title">
-                                        <div style="font-size: 100%;">The tool is best viewed in the two-column layout with a browser window size of minimum 1,000px and the map and sunburst widgets next to each other.</div>
+                                        <div style="font-size: 100%;">The tool is best viewed in the two-column layout with a browser window size of minimum 1,000px.</div>
                                     </h3>
                                 </div>
 
@@ -82,6 +82,33 @@
                             <!-- /.box -->
 
 
+                            <!-- Feature widget -->
+                            <div class="box box-primary" id="featurewidget">
+                                <div class="box-header">
+                                    <!-- tools box -->
+                                    <div class="pull-right box-tools">
+                                        <button class="btn btn-primary btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-primary btn-sm" data-widget='remove' data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                                    </div><!-- /. tools -->
+
+                                    <i class="fa fa-gear"></i>
+                                    <h3 class="box-title">
+                                        Features
+                                    </h3>
+                                </div>
+
+                                <div class="box-body">
+                                    <div id="featureset" class="table table-striped">
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.box -->
+
+                        </section> <!-- /.Left col -->
+                        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+                        <section class="col-lg-6 connectedSortable">
 
 
                             <!-- Map box -->
@@ -137,9 +164,15 @@
 
 
 
-                        </section><!-- /.Left col -->
+                        </section><!-- /.Right col -->
+
+
+                    </div>
+
+                    <div class="row">
+
                         <!-- right col (We are only adding the ID to make the widgets sortable)-->
-                        <section class="col-lg-6 connectedSortable">
+                        <section class="col-lg-12 connectedSortable">
 
                             <!-- Sunburst box -->
                             <div class="box box-primary">

@@ -46,6 +46,8 @@ var fam2macro = {};
 var phonFreq = {};
 var lang2phonemes = {};
 var feature = startFeature;
+var phonfeatures = [];
+var segmentByFeatures = {};
 
 //############### projection settings ###############
 var margin = {top: 10, left: 10, bottom: 80, right: 10}
@@ -237,8 +239,24 @@ function brushed(p) {
 
 }
 
+//############### get information about features for widget ###################
+d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
+	phonfeatures = results;
+	var feattablecount = 0;
+	for(var k in phonfeatures[0]){
+		feattablecount += 1;
+		if(feattablecount % 2 == 1){ $("#featureset").append("<div style='display: table-row'>");}
+		$("#featureset").append("<div style='display: table-cell; width: 250px;'><input type='checkbox' name='" + k + "' id='" + k + "'> " + k + " </div>");
+		if(feattablecount % 2 == 0){ $("#featureset").append("</div>");}
+	}
 
-//############### get information about features for drowdown menu ###############
+	phonfeatures.forEach(function(a){
+		segmentByFeatures[a.segment] = a;
+	});
+});
+
+
+//############### get information about segments for drowdown menu ###############
 d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 
 
@@ -284,6 +302,13 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 			select.appendChild(el);
 		
 	});
+
+	/* add extra element for customized feature combination */
+	var el = document.createElement("option");
+	el.textContent = "Feature combination";
+	el.value = "combination";
+	select.appendChild(el);
+
 	loaddata(startFeature);
 	//console.log(featureByName);
 
@@ -316,6 +341,22 @@ function loaddata(feature){
 	  this.parentNode.appendChild(this);
 	  });
 	};
+
+
+
+	/* select respective features in the feature table */
+	var currsegment = segmentByFeatures[feature];
+	for(var k in currsegment){
+		//console.log(k);
+		if(currsegment[k] == "+"){
+			$("#" + k).prop('checked', true);;
+		}
+		else{
+			$("#" + k).prop('checked', false);;
+		}
+	}
+
+
 
 	/* get language information from aggregated file */
 	d3.tsv('data/phoible-aggregated.tsv').get(function (err, langdata) {
@@ -522,6 +563,7 @@ function sunburst(languagedata){
 		//############# CONSTRUCT SUNBURST #############
 
 		//var width = 550,
+		width = parseInt(d3.select('#sunburst').style('width'));
 	    height = width,
 	    radius = Math.min(width-30, height-30) / 2;
 
