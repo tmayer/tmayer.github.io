@@ -19,7 +19,7 @@ window.onresize = function(event) {
 
 //############### global variables ###############
 
-var radSmall = 2.5;
+var radSmall = 1.5;
 var radFocus = 6;
 var scaleFactor = 1;
 var ew = 0, ns = 0;
@@ -36,7 +36,7 @@ var radius;
 var fam;
 var featureSet = {};
 var groupScale;
-var startFeature = "n";
+var startFeature = ["n"];
 var scaleType = "nominal";
 var currfeature;
 var changeScale = true;
@@ -48,6 +48,10 @@ var lang2phonemes = {};
 var feature = startFeature;
 var phonfeatures = [];
 var segmentByFeatures = {};
+var sunburstwidth = parseInt(d3.select('#sunburst').style('width'));
+var languagedata;
+var rellanguages;
+var featuresBySegment;
 
 //############### projection settings ###############
 var margin = {top: 10, left: 10, bottom: 80, right: 10}
@@ -56,20 +60,20 @@ var margin = {top: 10, left: 10, bottom: 80, right: 10}
 if(width > 580){ width = 580;}
 
 var width = width - margin.left - margin.right
-  , mapRatio = .9
+  , mapRatio = .6
   , height = width * mapRatio - margin.bottom;
 
 
-var projection = d3.geo.mercator()
-	.scale(width/8)
+var projection = d3.geo.equirectangular() // gall peters
+	.scale(width/7)
     .translate([width / 2 , height / 2])
-	.center([0,50])
+	.center([0,20])
 	//.rotate([-140,0])
 	.rotate([-153,0])
 	;
 
 
-$('#mapcontainer').css("height",function(){return height + 120;});
+$('#mapcontainer').css("height",function(){return height + 110;});
 
 //############### make basic plot ###############
 var svg = d3.select("#map").append("svg")
@@ -215,6 +219,7 @@ function brushed(p) {
 	selLanguages = allLanguages;
 	d3.select('#sunburst svg').remove();
 	sunburst(selLanguages);
+	languagedata = selLanguages;
   }
   else{
 	  selLanguages = [];
@@ -235,6 +240,7 @@ function brushed(p) {
 	  });
 	  d3.select('#sunburst svg').remove();
 	  sunburst(selLanguages);
+	  languagedata = selLanguages;
   }
 
 }
@@ -242,6 +248,7 @@ function brushed(p) {
 //############### get information about features for widget ###################
 d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 	phonfeatures = results;
+	/* now manually in index.html
 	var feattablecount = 0;
 	for(var k in phonfeatures[0]){
 		feattablecount += 1;
@@ -249,10 +256,46 @@ d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 		$("#featureset").append("<div style='display: table-cell; width: 250px;'><input type='checkbox' name='" + k + "' id='" + k + "'> " + k + " </div>");
 		if(feattablecount % 2 == 0){ $("#featureset").append("</div>");}
 	}
+	*/
+
+	featurenames = [];
+	for(var k in phonfeatures[0]){
+		featurenames.push(k);
+	}
+
+	featuresBySegment = {};
 
 	phonfeatures.forEach(function(a){
 		segmentByFeatures[a.segment] = a;
+		/*
+		currentfeatstring = "";
+		featurenames.forEach(function(k){
+			if(a[k] == "+"){
+				currentfeatstring += "+";
+			}
+			else{
+				currentfeatstring += "-";
+			}
+		});
+		if(currentfeatstring in featuresBySegment){
+			featuresBySegment[currentfeatstring].push(a.segment);
+		}
+		else{
+			featuresBySegment[currentfeatstring] = [a.segment];
+		}
+		*/
+		featurenames.forEach(function(k){
+			if(a[k] == "+"){
+				if(k in featuresBySegment){
+					featuresBySegment[k].push(a.segment);
+				}
+				else{
+					featuresBySegment[k] = [a.segment];
+				}
+			}
+		});
 	});
+
 });
 
 
@@ -292,9 +335,15 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 
 	
 	/* feed the dropdown with the most frequent phonemes */
-	var select = document.getElementById("features");
+	var select = document.getElementById("featureselect");
+
+	// add extra element for customized feature combination
+	var el = document.createElement("option");
+	el.textContent = "Feature combination";
+	el.value = "combination";
+	select.appendChild(el);
+
 	freqPhonemes.forEach(function(a){
-			//featureByName[a.PhonemeID] = a.Phoneme;
 			var el = document.createElement("option");
 			el.textContent = a;
 			el.value = a;
@@ -303,14 +352,9 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 		
 	});
 
-	/* add extra element for customized feature combination */
-	var el = document.createElement("option");
-	el.textContent = "Feature combination";
-	el.value = "combination";
-	select.appendChild(el);
+	
 
 	loaddata(startFeature);
-	//console.log(featureByName);
 
 	// enable select picker
 	$('.selectpicker').selectpicker({
@@ -331,6 +375,7 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 //############### load data ###############
 function loaddata(feature){
 
+
 	var nodeCircles = g.append('g').attr('class','nodeCircles');
 	langByValue = {};
 	codeByLang = {};
@@ -345,14 +390,16 @@ function loaddata(feature){
 
 
 	/* select respective features in the feature table */
-	var currsegment = segmentByFeatures[feature];
-	for(var k in currsegment){
-		//console.log(k);
-		if(currsegment[k] == "+"){
-			$("#" + k).prop('checked', true);;
-		}
-		else{
-			$("#" + k).prop('checked', false);;
+	if(feature.length == 1){
+		var currsegment = segmentByFeatures[feature[0]];
+		for(var k in currsegment){
+			//console.log(k);
+			if(currsegment[k] == "+"){
+				$("#" + k).prop('checked', true);;
+			}
+			else{
+				$("#" + k).prop('checked', false);;
+			}
 		}
 	}
 
@@ -369,6 +416,16 @@ function loaddata(feature){
 		*/
 		allLanguages = langdata;
 		catSelection = allLanguages;
+
+		//rellanguages = allLanguages.filter(function(a){ return lang2phonemes[a.LanguageCode].indexOf(feature) != -1; });
+		rellanguages = [];
+		allLanguages.forEach(function(a){
+			feature.forEach(function(f){
+				if(lang2phonemes[a.LanguageCode].indexOf(f) != -1){
+					rellanguages.push(a.LanguageCode);
+				}
+			});
+		});
 
 
 		//############### plot locations ###############
@@ -395,15 +452,15 @@ function loaddata(feature){
 				return radSmall/scaleFactor;
 			})
 			.style("fill", function(d){
-				if(lang2phonemes[d.LanguageCode].indexOf(feature) != -1){
-					return "DarkGreen";
+				if(rellanguages.indexOf(d.LanguageCode) != -1){
+					return "steelblue";
 				}
 				else{
-					return "FireBrick";
+					return "Orange";
 				}
 			})
 			.style("stroke","black")
-			.style("stroke-width", function(){ return 0.2/scaleFactor;})
+			.style("stroke-width", function(){ return 0.1/scaleFactor;})
 			.style("cursor","pointer")
 			.on("mouseover",function(d){
 
@@ -411,7 +468,7 @@ function loaddata(feature){
 				d3.selectAll(".iteminfo").text(walsByInfo[d['LanguageCode']]);
 
 				$(".infoicon").css("color",function(){
-					return lang2phonemes[d.LanguageCode].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+					return rellanguages.indexOf(d.LanguageCode) != -1 ? "steelblue" : "Orange";
 				})
 				.css("display","inline")
 				;
@@ -450,7 +507,7 @@ function loaddata(feature){
 
 				d3.selectAll('.sun')
 					.style('fill',function(e){
-						return e.children ? '#ccc' : lang2phonemes[e.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+						return e.children ? '#ccc' : rellanguages.indexOf(e.name) != -1 ? "steelblue" : "Orange";
 					})
 				;
 
@@ -464,6 +521,7 @@ function loaddata(feature){
 
 		/* call sunburst generation */
 		sunburst(selLanguages);
+		languagedata = selLanguages;
 
 	});
 
@@ -563,11 +621,11 @@ function sunburst(languagedata){
 		//############# CONSTRUCT SUNBURST #############
 
 		//var width = 550,
-		width = parseInt(d3.select('#sunburst').style('width'));
-	    height = width,
-	    radius = Math.min(width-30, height-30) / 2;
+		//sunburstwidth = parseInt(d3.select('#sunburst').style('width'));
+	    sunburstheight = sunburstwidth,
+	    radius = Math.min(sunburstwidth-30, sunburstheight-30) / 2;
 
-	    $('#sunburstcontainer').css("height",function(){return height + 130;});
+	    $('#sunburstcontainer').css("height",function(){return sunburstheight + 130;});
 
 		var xscale = d3.scale.linear()
 		    .range([0, 2 * Math.PI]);
@@ -578,10 +636,11 @@ function sunburst(languagedata){
 		var color = d3.scale.category20c();
 
 		var svg = d3.select("#sunburst").append("svg")
-		    .attr("width", width)
-		    .attr("height", height)
+			.attr('class',"sunburstsvg")
+		    .attr("width", sunburstwidth)
+		    .attr("height", sunburstheight)
 		  	.append("g")
-		    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+		    .attr("transform", "translate(" + sunburstwidth / 2 + "," + (sunburstheight / 2 + 10) + ")");
 
 		var partition = d3.layout.partition()
 		    .value(function(d) { return 1; });
@@ -610,7 +669,7 @@ function sunburst(languagedata){
 		      .style("fill", function(d) {
 		      	//return color((d.children ? d : d.parent).name);
 		      	//console.log(d);
-		      	return d.children ? '#ccc' : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+		      	return d.children ? '#ccc' : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
 		      })
 			  .style("fill-rule", "evenodd")
 			  .on('mouseover',function(d){
@@ -642,7 +701,7 @@ function sunburst(languagedata){
 
 				d3.selectAll('.sun_' + d.name.replace(/[-\s]/g,'_'))
 					.style('fill',function(d){
-						return d.children ? '#444' : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+						return d.children ? '#444' : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
 					})
 					;
 
@@ -689,7 +748,7 @@ function sunburst(languagedata){
 
 					$(".infoicon")
 						.css("color",function(){
-							return d.children ? "#444" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+							return d.children ? "#444" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
 						})
 						.css("display","inline")
 						;
@@ -715,7 +774,7 @@ function sunburst(languagedata){
 
 				d3.selectAll('.sun')
 					.style('fill',function(d){
-						return d.name == "root" ? "#999" : d.children ? "#ccc" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
+						return d.name == "root" ? "#999" : d.children ? "#ccc" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
 					})
 				;
 
@@ -762,7 +821,7 @@ function sunburst(languagedata){
 //############### listener to feature selection ###############
 //d3.select('#features').on('change',function(){
 	$('.selectpicker').on('change',function(){
-	feature = this.value;
+	feature = [this.value];
 	d3.select('.nodeCircles').remove();
 	d3.select('#legend svg').remove();
 	d3.select('#sunburst svg').remove();
@@ -770,69 +829,6 @@ function sunburst(languagedata){
 })
 ;
 
-//############### listener to scale selection ###############
-//d3.select('#features').on('change',function(){
-$('.selectpickerScale').on('change',function(){
-	scaleType = this.value;
-
-	if(scaleType == "ordinal" && featurenames.length < 10 && featurenames.length > 2){
-		groupScale = d3.scale.ordinal()
-				.range(colorbrewer.OrRd[featurenames.length]);
-		document.getElementById("ScaleTypeSelect").selectedIndex = "1";
-		$('.selectpickerScale').selectpicker('refresh');
-	}
-	else{
-		groupScale = uniquevalues.length > 10 ? d3.scale.category20() : d3.scale.category10();
-		document.getElementById("ScaleTypeSelect").selectedIndex = "0";
-		$('.selectpickerScale').selectpicker('refresh');
-	}
-	// map points
-	d3.selectAll('.location')
-		.transition().duration(1000)
-		.style('fill',function(d){
-			langByValue[d['wals code']] = d.value;
-			return groupScale(d.value);
-		});
-
-	// sunburst segments
-	d3.selectAll('.sun')
-		.transition().duration(1000)
-		.style('fill',function(d){
-			return d.name == "root" ? "#999" : d.children ? "#ccc" : lang2phonemes[d.name].indexOf(feature) != -1 ? "DarkGreen" : "FireBrick";
-		});
-
-	// legend dots
-	d3.selectAll('.legendCircle')
-		.transition().duration(1000)
-		.style('fill',function(d){
-			currfeat = d.split(',')[0];
-			if(featureSet[currfeat]){
-				return groupScale(d.split(',')[0]);
-			}
-			else{
-				return "white";
-			}
-		})
-		.style("stroke",function(d){
-			currfeat = d.split(',')[0];
-			if(featureSet[currfeat]){
-				return "black";
-			}
-			else{
-				return groupScale(d.split(',')[0]);
-			}
-		})
-		.style("stroke-width",function(d){
-			currfeat = d.split(',')[0];
-			if(featureSet[currfeat]){
-				return 0.5;
-			}
-			else{
-				return 1;
-			}
-		});
-})
-;
 
 
 function redrawMap(){
@@ -979,7 +975,6 @@ function resizeMap(){
 });
 
 d3.select('#resetmap').on('click',function(a){
-	radSmall = 2.5;
  g.transition()
  .duration(750)
  .attr('transform','translate(0,0)');
@@ -991,7 +986,7 @@ d3.select('#resetmap').on('click',function(a){
                      return radSmall/scaleFactor;
                  })
                  .style('stroke-width',function(d){
-                     return 0.2/scaleFactor;
+                     return 0.1/scaleFactor;
                  })
              ;
  g.selectAll("path")
@@ -1012,5 +1007,87 @@ d3.select('#showmacroareas').on('click',function(a){
 	else{
 		$(".macroAreas").css("visibility","hidden");
 		$("#showmacroareas").attr("class","btn btn-primary btn-xs");
+	}
+});
+
+/* make sunburst smaller */
+d3.select("#smallersunburst").on('click',function(a){
+	sunburstwidth -= 100;
+	d3.select(".sunburstsvg").remove();
+	sunburst(languagedata);
+});
+
+/* make sunburst bigger */
+d3.select("#biggersunburst").on('click',function(a){
+	sunburstwidth += 100;
+	d3.select(".sunburstsvg").remove();
+	sunburst(languagedata);
+});
+
+/* update feature combination */
+d3.select('#featuresubmit').on("click",function(a){
+	/*
+	currentfeatstring = "";
+	featurenames.forEach(function(a){
+		if($("#"+a).prop("checked") == true){
+			//console.log(a);
+			currentfeatstring += "+";
+		}
+		else{
+			currentfeatstring += "-";
+		}
+	});
+	console.log(currentfeatstring,featuresBySegment[currentfeatstring]);
+	feature = featuresBySegment[currentfeatstring];
+	*/
+
+
+	document.getElementById("featureselect").selectedIndex = "0";
+	$('.selectpicker').selectpicker('refresh');
+
+	var relsegments = [];
+	var pluscount = 0;
+
+	featurenames.forEach(function(a){
+		if($("#"+a).prop("checked") == true){
+			//console.log(a);
+			pluscount += 1;
+			var currfeatsegments = featuresBySegment[a];
+			currfeatsegments.forEach(function(c){
+				relsegments.push(c);
+			})
+			
+		}
+	});
+
+	var relobj = { };
+	for (var i = 0; i < relsegments.length; i++) {
+	   if (relobj[relsegments[i]]) {
+	      relobj[relsegments[i]]++;
+	   }
+	   else {
+	      relobj[relsegments[i]] = 1;
+	   } 
+	}
+	//console.log(relobj);
+	
+	feature = [];
+
+	for(var k in relobj){
+		if(relobj[k] == pluscount){
+			feature.push(k);
+		}
+	}
+
+	if(feature == undefined){
+		$("#featurenotice").text("No segments match these feature combinations");
+	}
+	else{
+
+		$("#featurenotice").text(" "); //Matching segments: " + feature.join(", "));
+		d3.select('.nodeCircles').remove();
+		d3.select('#legend svg').remove();
+		d3.select('#sunburst svg').remove();
+		loaddata(feature);
 	}
 });

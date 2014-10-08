@@ -45,7 +45,7 @@
                     <hr/>
                     <div>
                     <label for="features"><i class="fa fa-folder-open"></i> Select phoneme: &nbsp;
-                            <select id="features" class="selectpicker show-tick" data-live-search="true">
+                            <select id="featureselect" class="selectpicker show-tick" data-live-search="true">
                             </select>
                         </label>
                     </div>
@@ -87,8 +87,9 @@
                                 <div class="box-header">
                                     <!-- tools box -->
                                     <div class="pull-right box-tools">
-                                        <button class="btn btn-primary btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
-                                        <button class="btn btn-primary btn-sm" data-widget='remove' data-toggle="tooltip" title="Remove"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-primary btn-sm" data-toggle="tooltip"
+                                        title="Select feature combinations" style="margin-right: 5px;"><i class="fa fa-info"></i></button>
                                     </div><!-- /. tools -->
 
                                     <i class="fa fa-gear"></i>
@@ -99,7 +100,91 @@
 
                                 <div class="box-body">
                                     <div id="featureset" class="table table-striped">
+
+                                    <div id="featureset" class="table table-striped">
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="click" id="click"> click </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="tone" id="tone"> tone </div>
                                     </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="stress" id="stress"> stress </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="syllabic" id="syllabic"> syllabic </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="short" id="short"> short </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="long" id="long"> long </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="consonantal" id="consonantal"> consonantal </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="sonorant" id="sonorant"> sonorant </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="continuant" id="continuant"> continuant </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="delayedRelease" id="delayedRelease"> delayedRelease </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="approximant" id="approximant"> approximant </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="tap" id="tap"> tap </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="trill" id="trill"> trill </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="nasal" id="nasal"> nasal </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="lateral" id="lateral"> lateral </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="labial" id="labial"> labial </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="round" id="round"> round </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="labiodental" id="labiodental"> labiodental </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="coronal" id="coronal"> coronal </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="anterior" id="anterior"> anterior </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="distributed" id="distributed"> distributed </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="strident" id="strident"> strident </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="dorsal" id="dorsal"> dorsal </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="high" id="high"> high </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="low" id="low"> low </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="front" id="front"> front </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="back" id="back"> back </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="tense" id="tense"> tense </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="retractedTongueRoot" id="retractedTongueRoot"> retractedTongueRoot </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="advancedTongueRoot" id="advancedTongueRoot"> advancedTongueRoot </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="periodicGlottalSource" id="periodicGlottalSource"> periodicGlottalSource </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="epilaryngealSource" id="epilaryngealSource"> epilaryngealSource </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="spreadGlottis" id="spreadGlottis"> spreadGlottis </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="constrictedGlottis" id="constrictedGlottis"> constrictedGlottis </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="fortis" id="fortis"> fortis </div>
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="raisedLarynxEjective" id="raisedLarynxEjective"> raisedLarynxEjective </div>
+                                    </div>
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><input type="checkbox" name="loweredLarynxImplosive" id="loweredLarynxImplosive"> loweredLarynxImplosive </div>
+                                    </div>
+
+                                    <div style="display: table-row">
+                                        <div style="display: table-cell; width: 250px;"><button class="btn btn-primary btn-sm" type="submit" value="Update" name="featuresubmit" id="featuresubmit"> Update feature combination </div>
+                                    </div>
+
+                                    </div>
+
+                                    <div id="featurenotice" style="width: 100%;">&nbsp;</div>
                                 </div>
 
 
@@ -180,6 +265,8 @@
                                     <!-- tools box -->
                                     <div class="pull-right box-tools">
                                         <button class="btn btn-primary btn-sm pull-right" data-widget='collapse' data-toggle="tooltip" title="Collapse" style="margin-right: 5px;"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-primary btn-sm pull-right" id="biggersunburst" data-toggle="tooltip" title="Make sunburst larger" style="margin-right: 5px;"><i class="fa fa-search-plus"></i></button>
+                                        <button class="btn btn-primary btn-sm pull-right" id="smallersunburst" data-toggle="tooltip" title="Make sunburst smaller" style="margin-right: 5px;"><i class="fa fa-search-minus"></i></button>
                                         <button class="btn btn-primary btn-sm pull-right" data-toggle="tooltip"
                                         title="Click on an arc of the sunburst to zoom in on the subfamily. Click on the center to go back." style="margin-right: 5px;"><i class="fa fa-info"></i></button>
                                     </div><!-- /. tools -->
