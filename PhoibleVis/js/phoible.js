@@ -23,37 +23,24 @@ var radSmall = 1.5;
 var radFocus = 6;
 var scaleFactor = 1;
 var ew = 0, ns = 0;
-var families;
-var langByValue;
-var langByGenFamily;
-var codeByLang;
-var featureByName = {};
 var selLanguages = [];
-var catSelection = [];
 var allLanguages = [];
 var zoompan = false;
 var radius;
-var fam;
-var featureSet = {};
-var groupScale;
 var startFeature = ["n"];
 var scaleType = "nominal";
 var currfeature;
 var changeScale = true;
-var uniquevalues;
 var featurenames;
-var fam2macro = {};	
-var phonFreq = {};
 var lang2phonemes = {};
 var feature = startFeature;
-var phonfeatures = [];
 var segmentByFeatures = {};
 var sunburstwidth = parseInt(d3.select('#sunburst').style('width'));
 var languagedata;
 var rellanguages;
 var featuresBySegment;
 
-//############### projection settings ###############
+//############### map projection settings ###############
 var margin = {top: 10, left: 10, bottom: 80, right: 10}
   , width = parseInt(d3.select('#map').style('width'));
 
@@ -64,10 +51,13 @@ var width = width - margin.left - margin.right
   , height = width * mapRatio - margin.bottom;
 
 
-var projection = d3.geo.equirectangular() // gall peters
+var projection = //d3.geo.equirectangular() 
+	// gall peters
+	d3.geo.cylindricalEqualArea()
+    .parallel(45)
 	.scale(width/7)
     .translate([width / 2 , height / 2])
-	.center([0,20])
+	.center([0,0])
 	//.rotate([-140,0])
 	.rotate([-153,0])
 	;
@@ -155,13 +145,6 @@ macroAreaFiles.forEach(function(marea){
 
 });
 
-//############# family to macro area #####
-d3.tsv("data/familiescontinents.txt",function(macdata){
-	//console.log(macdata);
-	macdata.forEach(function(f){
-		fam2macro[f.family] = f.continent;
-	});
-});
 
 //############### brushing ###############
 
@@ -218,8 +201,8 @@ function brushed(p) {
 	d3.selectAll(".location").classed('brushhidden', false);
 	selLanguages = allLanguages;
 	d3.select('#sunburst svg').remove();
-	sunburst(selLanguages);
 	languagedata = selLanguages;
+	sunburst();
   }
   else{
 	  selLanguages = [];
@@ -239,15 +222,15 @@ function brushed(p) {
 			}
 	  });
 	  d3.select('#sunburst svg').remove();
-	  sunburst(selLanguages);
 	  languagedata = selLanguages;
+	  sunburst();
   }
 
 }
 
 //############### get information about features for widget ###################
 d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
-	phonfeatures = results;
+	var phonfeatures = results;
 	/* now manually in index.html
 	var feattablecount = 0;
 	for(var k in phonfeatures[0]){
@@ -267,23 +250,7 @@ d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 
 	phonfeatures.forEach(function(a){
 		segmentByFeatures[a.segment] = a;
-		/*
-		currentfeatstring = "";
-		featurenames.forEach(function(k){
-			if(a[k] == "+"){
-				currentfeatstring += "+";
-			}
-			else{
-				currentfeatstring += "-";
-			}
-		});
-		if(currentfeatstring in featuresBySegment){
-			featuresBySegment[currentfeatstring].push(a.segment);
-		}
-		else{
-			featuresBySegment[currentfeatstring] = [a.segment];
-		}
-		*/
+
 		featurenames.forEach(function(k){
 			if(a[k] == "+"){
 				if(k in featuresBySegment){
@@ -302,6 +269,7 @@ d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 //############### get information about segments for drowdown menu ###############
 d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
 
+	var phonFreq = {};
 
 	/* get the most frequent phonemes for the dropdown menu */
 	results.forEach(function(a){
@@ -377,8 +345,6 @@ function loaddata(feature){
 
 
 	var nodeCircles = g.append('g').attr('class','nodeCircles');
-	langByValue = {};
-	codeByLang = {};
 	walsByInfo = {};
 
 	d3.selection.prototype.moveToFront = function() {
@@ -415,7 +381,6 @@ function loaddata(feature){
 		});
 		*/
 		allLanguages = langdata;
-		catSelection = allLanguages;
 
 		//rellanguages = allLanguages.filter(function(a){ return lang2phonemes[a.LanguageCode].indexOf(feature) != -1; });
 		rellanguages = [];
@@ -520,8 +485,8 @@ function loaddata(feature){
 		brushed2();
 
 		/* call sunburst generation */
-		sunburst(selLanguages);
 		languagedata = selLanguages;
+		sunburst();
 
 	});
 
@@ -532,10 +497,9 @@ function loaddata(feature){
 overall.append("g").attr("class","brush").call(brush);
 
 /* Sunburst creation */
-function sunburst(languagedata){
+function sunburst(){
 
 		//############### construct genealogy ###############
-		families = {};
 		langByFam = {};
 		langByGen = {};
 		genByFam = {};
@@ -1014,14 +978,14 @@ d3.select('#showmacroareas').on('click',function(a){
 d3.select("#smallersunburst").on('click',function(a){
 	sunburstwidth -= 100;
 	d3.select(".sunburstsvg").remove();
-	sunburst(languagedata);
+	sunburst();
 });
 
 /* make sunburst bigger */
 d3.select("#biggersunburst").on('click',function(a){
 	sunburstwidth += 100;
 	d3.select(".sunburstsvg").remove();
-	sunburst(languagedata);
+	sunburst();
 });
 
 /* update feature combination */
@@ -1079,15 +1043,17 @@ d3.select('#featuresubmit').on("click",function(a){
 		}
 	}
 
-	if(feature == undefined){
+	if(feature.length == 0){
 		$("#featurenotice").text("No segments match these feature combinations");
 	}
 	else{
-
-		$("#featurenotice").text(" "); //Matching segments: " + feature.join(", "));
-		d3.select('.nodeCircles').remove();
-		d3.select('#legend svg').remove();
-		d3.select('#sunburst svg').remove();
-		loaddata(feature);
+		$("#featurenotice").html("&nbsp;"); 
 	}
+
+	
+	d3.select('.nodeCircles').remove();
+	d3.select('#legend svg').remove();
+	d3.select('#sunburst svg').remove();
+	loaddata(feature);
+
 });
