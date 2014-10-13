@@ -47,7 +47,7 @@ var margin = {top: 10, left: 10, bottom: 80, right: 10}
 if(width > 580){ width = 580;}
 
 var width = width - margin.left - margin.right
-  , mapRatio = .6
+  , mapRatio = .8
   , height = width * mapRatio - margin.bottom;
 
 
@@ -55,7 +55,7 @@ var projection = //d3.geo.equirectangular()
 	// gall peters
 	d3.geo.cylindricalEqualArea()
     .parallel(45)
-	.scale(width/7)
+	.scale(width/5)
     .translate([width / 2 , height / 2])
 	.center([0,0])
 	//.rotate([-140,0])
@@ -375,23 +375,24 @@ function loaddata(feature){
 	d3.tsv('data/phoible-aggregated.tsv').get(function (err, langdata) {
 
 
-		/*
-		allLanguages = langdata.filter(function(a){
-			return lang2phonemes[a.LanguageCode].indexOf(feature) != -1;
-		});
-		*/
-		allLanguages = langdata;
+		allLanguages = langdata.filter(function(a){return a.Trump == 1; });
 
 		//rellanguages = allLanguages.filter(function(a){ return lang2phonemes[a.LanguageCode].indexOf(feature) != -1; });
-		rellanguages = [];
+		rellanguagesdict = {};
 		allLanguages.forEach(function(a){
 			feature.forEach(function(f){
 				if(lang2phonemes[a.LanguageCode].indexOf(f) != -1){
-					rellanguages.push(a.LanguageCode);
+					rellanguagesdict[a.LanguageCode] = 1;
 				}
 			});
 		});
 
+		rellanguages = [];
+		for(var k in rellanguagesdict){
+			rellanguages.push(k);
+		}
+
+		$("#featurenotice").text(rellanguages.length + " out of " + allLanguages.length + " languages show this feature combination");
 
 		//############### plot locations ###############
 		nodeCircles.selectAll("path")
@@ -718,6 +719,8 @@ function sunburst(){
 						;
 
 				}
+				var iconcolor = d.children ? "#444" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
+				tooltip.show('<i class="fa fa-square" style="color: ' + iconcolor + '"></i> ' + outname);
 
 
 
@@ -746,6 +749,8 @@ function sunburst(){
 					.html("&nbsp;");
 
 				$(".infoicon").css("display","none");
+
+				tooltip.hide();
 
 			  })
 		      .on("click", click)
@@ -990,20 +995,6 @@ d3.select("#biggersunburst").on('click',function(a){
 
 /* update feature combination */
 d3.select('#featuresubmit').on("click",function(a){
-	/*
-	currentfeatstring = "";
-	featurenames.forEach(function(a){
-		if($("#"+a).prop("checked") == true){
-			//console.log(a);
-			currentfeatstring += "+";
-		}
-		else{
-			currentfeatstring += "-";
-		}
-	});
-	console.log(currentfeatstring,featuresBySegment[currentfeatstring]);
-	feature = featuresBySegment[currentfeatstring];
-	*/
 
 
 	document.getElementById("featureselect").selectedIndex = "0";
@@ -1033,7 +1024,6 @@ d3.select('#featuresubmit').on("click",function(a){
 	      relobj[relsegments[i]] = 1;
 	   } 
 	}
-	//console.log(relobj);
 	
 	feature = [];
 
@@ -1043,12 +1033,14 @@ d3.select('#featuresubmit').on("click",function(a){
 		}
 	}
 
+	/*
 	if(feature.length == 0){
 		$("#featurenotice").text("No segments match these feature combinations");
 	}
 	else{
 		$("#featurenotice").html("&nbsp;"); 
 	}
+	*/
 
 	
 	d3.select('.nodeCircles').remove();
@@ -1057,3 +1049,86 @@ d3.select('#featuresubmit').on("click",function(a){
 	loaddata(feature);
 
 });
+
+/* uncheck all checkbox buttons */
+d3.select("#uncheckall").on('click',function(a){
+	$('#featureset input:checkbox').prop('checked',false);
+});
+
+// tooltip taken from http://philmap.000space.com/gmap-api/poly-hov.html
+
+var tooltip=function(){
+var id = 'tt';
+var top = 3;
+var left = 3;
+var maxw = 400;
+var speed = 10;
+var timer = 20;
+var endalpha = 95;
+var alpha = 0;
+var tt,t,c,b,h;
+var ie = document.all ? true : false;
+tt = document.getElementById("tt");
+return{
+show:function(v,w){
+  if(tt == null){
+    tt = document.createElement('div');
+    tt.setAttribute('id',id);
+    t = document.createElement('div');
+    t.setAttribute('id',id + 'top');
+    c = document.createElement('div');
+    c.setAttribute('id',id + 'cont');
+    b = document.createElement('div');
+    b.setAttribute('id',id + 'bot');
+    tt.appendChild(t);
+    tt.appendChild(c);
+    tt.appendChild(b);
+    document.body.appendChild(tt);
+    tt.style.opacity = 0;
+    tt.style.filter = 'alpha(opacity=0)';
+    document.onmousemove = this.pos;
+  }
+  tt.style.display = 'block';
+  c.innerHTML = v;
+  tt.style.width = w ? w + 'px' : 'auto';
+  if(!w && ie){
+    t.style.display = 'none';
+    b.style.display = 'none';
+    tt.style.width = tt.offsetWidth;
+    t.style.display = 'block';
+    b.style.display = 'block';
+  }
+  if(tt.offsetWidth > maxw){tt.style.width = maxw + 'px'}
+  h = parseInt(tt.offsetHeight) + top;
+  clearInterval(tt.timer);
+  tt.timer = setInterval(function(){tooltip.fade(1)},timer);
+},
+pos:function(e){
+  var u = ie ? event.clientY + document.documentElement.scrollTop : e.pageY;
+  var l = ie ? event.clientX + document.documentElement.scrollLeft : e.pageX;
+  tt.style.top = (u - h) + 'px';
+  tt.style.left = (l + left) + 'px';
+},
+fade:function(d){
+  var a = alpha;
+  if((a != endalpha && d == 1) || (a != 0 && d == -1)){
+    var i = speed;
+    if(endalpha - a < speed && d == 1){
+      i = endalpha - a;
+    }else if(alpha < speed && d == -1){
+      i = a;
+    }
+    alpha = a + (i * d);
+    tt.style.opacity = alpha * .01;
+    tt.style.filter = 'alpha(opacity=' + alpha + ')';
+  }else{
+    clearInterval(tt.timer);
+    if(d == -1){tt.style.display = 'none'}
+  }
+},
+hide:function(){
+  clearInterval(tt.timer);
+  tt.timer = setInterval(function(){tooltip.fade(-1)},timer);
+}
+};
+}();   
