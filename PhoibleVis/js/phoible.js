@@ -247,6 +247,7 @@ d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 	}
 
 	featuresBySegment = {};
+	negFeaturesBySegment = {};
 
 	phonfeatures.forEach(function(a){
 		segmentByFeatures[a.segment] = a;
@@ -258,6 +259,14 @@ d3.tsv('data/phoible-segments-features.tsv').get(function (err, results){
 				}
 				else{
 					featuresBySegment[k] = [a.segment];
+				}
+			}
+			if(a[k] == "-"){
+				if(k in negFeaturesBySegment){
+					negFeaturesBySegment[k].push(a.segment);
+				}
+				else{
+					negFeaturesBySegment[k] = [a.segment];
 				}
 			}
 		});
@@ -331,11 +340,13 @@ d3.tsv('data/phoible-phonemes.tsv').get(function (err, results){
       width: 170//'auto'
   	});
 
-  	$('.selectpickerScale').selectpicker({
-      style: 'btn-default btn-xs',
-      size: 20,
-      width: 200//'auto'
+	/*
+  	$('.selectpickerFeatures').selectpicker({
+      style: 'btn-primary btn-xs',
+      size: 3,
+      width: 40//'auto'
   	});
+	*/
 	
 }); /* end load phoneme data */
 
@@ -361,13 +372,18 @@ function loaddata(feature){
 		for(var k in currsegment){
 			//console.log(k);
 			if(currsegment[k] == "+"){
-				$("#" + k).prop('checked', true);;
+				//$("#" + k).prop('checked', true);
+				document.getElementById(k).selectedIndex = "1";
+				d3.select("#" + k + "Label").classed("plus",true);
 			}
-			else{
-				$("#" + k).prop('checked', false);;
+			else if(currsegment[k] == "-"){
+				document.getElementById(k).selectedIndex = "2";
+				d3.select("#" + k + "Label").classed("minus",true);
 			}
 		}
 	}
+
+	d3.select("#segmentshow").html("Segment(s) showing this feature combination: <br>" + feature.join(", "));
 
 
 
@@ -720,7 +736,7 @@ function sunburst(){
 
 				}
 				var iconcolor = d.children ? "#444" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
-				tooltip.show('<i class="fa fa-square" style="color: ' + iconcolor + '"></i> ' + outname);
+				tooltip.show('<i class="fa fa-square" style="color: ' + iconcolor + '"></i><span style="text-transform: capitalize;"> ' + outname + "</span>");
 
 
 
@@ -1002,16 +1018,26 @@ d3.select('#featuresubmit').on("click",function(a){
 
 	var relsegments = [];
 	var pluscount = 0;
+	var minuscount = 0;
 
 	featurenames.forEach(function(a){
-		if($("#"+a).prop("checked") == true){
-			//console.log(a);
+		if(a != "segment" && document.getElementById(a).selectedIndex == "1"){
 			pluscount += 1;
 			var currfeatsegments = featuresBySegment[a];
-			currfeatsegments.forEach(function(c){
-				relsegments.push(c);
-			})
-			
+			if(currfeatsegments){
+				currfeatsegments.forEach(function(c){
+					relsegments.push(c);
+				});	
+			}		
+		}
+		if(a != "segment" && document.getElementById(a).selectedIndex == "2"){
+			minuscount += 1;
+			var currfeatsegments = negFeaturesBySegment[a];
+			if(currfeatsegments){
+				currfeatsegments.forEach(function(c){
+					relsegments.push(c);
+				});
+			}
 		}
 	});
 
@@ -1028,20 +1054,10 @@ d3.select('#featuresubmit').on("click",function(a){
 	feature = [];
 
 	for(var k in relobj){
-		if(relobj[k] == pluscount){
+		if(relobj[k] == pluscount + minuscount){
 			feature.push(k);
 		}
 	}
-
-	/*
-	if(feature.length == 0){
-		$("#featurenotice").text("No segments match these feature combinations");
-	}
-	else{
-		$("#featurenotice").html("&nbsp;"); 
-	}
-	*/
-
 	
 	d3.select('.nodeCircles').remove();
 	d3.select('#legend svg').remove();
@@ -1052,7 +1068,36 @@ d3.select('#featuresubmit').on("click",function(a){
 
 /* uncheck all checkbox buttons */
 d3.select("#uncheckall").on('click',function(a){
-	$('#featureset input:checkbox').prop('checked',false);
+	//$('#featureset input:checkbox').prop('checked',false);
+	featurenames.forEach(function(a){
+		if(a != "segment"){
+			document.getElementById(a).selectedIndex = "0";
+			d3.select("#" + a + "Label").classed("plus",false).classed("minus",false);
+		}
+	});
+	d3.select("#segmentshow").text("");
+});
+
+d3.selectAll(".selectpickerFeatures").on('change',function(a){
+	//console.log(this.id);
+	//d3.select("#" + a + )
+	d3.select("#" + this.id + "Label").classed("plus",false).classed("minus",false);
+	if(this.selectedIndex == "1"){
+		d3.select("#" + this.id + "Label").classed("plus",true);
+	}
+	else if(this.selectedIndex == "2"){
+		d3.select("#" + this.id + "Label").classed("minus",true);
+	}
+});
+
+/* segment show */
+d3.select("#showsegments").on("click",function(a){
+	if($("#segmentshow").css("display") == "block"){
+		$("#segmentshow").css('display',"none");
+	}
+	else{
+		$("#segmentshow").css('display',"block");
+	}
 });
 
 // tooltip taken from http://philmap.000space.com/gmap-api/poly-hov.html

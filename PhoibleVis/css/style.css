@@ -66,6 +66,7 @@ circle.hidden {
 
 .iteminfo,.infoicon {
 	font-size: 16pt;
+	text-transform: capitalize;
 }
 
 .activebutton {
@@ -99,4 +100,22 @@ circle.hidden {
     color:#FFF;
     border-radius: 3px;
     opacity: 0.85;
+}
+
+.plus {
+    background-color: steelblue;
+    color: white;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+.minus {
+    background-color: FireBrick;
+    color: white;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+#segmentshow {
+	display: none;
 }
