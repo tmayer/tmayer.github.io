@@ -735,9 +735,10 @@ function sunburst(){
 						;
 
 				}
-				var iconcolor = d.children ? "#444" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
-				tooltip.show('<i class="fa fa-square" style="color: ' + iconcolor + '"></i><span style="text-transform: capitalize;"> ' + outname + "</span>");
-
+				if(d.name != "root"){
+					var iconcolor = d.children ? "#444" : rellanguages.indexOf(d.name) != -1 ? "steelblue" : "Orange";
+					tooltip.show('<i class="fa fa-square" style="color: ' + iconcolor + '"></i><span style="text-transform: capitalize;"> ' + outname + "</span>");
+				}
 
 
 			  })
