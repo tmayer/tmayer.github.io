@@ -43,7 +43,7 @@ function init() {
         zoom: 15,
 
         // The latitude and longitude to center the map (always required)
-        center: new google.maps.LatLng(47.8099706, 9.6396107), 
+        center: new google.maps.LatLng(47.80634, 9.63778), 
 
         // Disables the default Google Maps UI components
         disableDefaultUI: true,
@@ -171,7 +171,7 @@ function init() {
 
     // Custom Map Marker Icon - Customize the map-marker.png file to customize your icon
     var image = 'img/map-marker.png';
-    var myLatLng = new google.maps.LatLng(47.8099706, 9.6396107);
+    var myLatLng = new google.maps.LatLng(47.80634, 9.63778);
     var beachMarker = new google.maps.Marker({
         position: myLatLng,
         map: map,
