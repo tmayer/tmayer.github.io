@@ -114,8 +114,8 @@ bibApp.controller('ArticleCtrl', function ($scope, $routeParams, segments){
     });
 });
 
-bibApp.controller('InfoCtrl', function ($scope, $routeParams, segments){
-  $scope.info = metadata;
+bibApp.controller('InfoCtrl', function ($scope, $routeParams, segments, $sce){
+  $scope.info = metadata; //metadata;
   $scope.filename = filename;
 });
 
