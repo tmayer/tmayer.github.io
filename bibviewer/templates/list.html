@@ -1,0 +1,61 @@
+  <nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" ng-model="search" placeholder="Search word or verse ID">
+        </div>
+      </form>
+      <ul class="nav navbar-nav">
+        <li><a href="#/">Open file</a></li>
+        <li><a href="#/info">Show metadata</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a>File: <span id="filenamebox"></span></a></li>
+        <li><a><span class="badge" id="nrsegments"></span> verses</a></li>
+
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<!--
+   <nav class="navbar navbar-default" role="navigation"
+
+      <a href="#/" role="button" class="btn btn-primary btn-sm">Open file</a>
+      &nbsp;&nbsp;
+      <input type="text" ng-model="search" placeholder="Search word or ID">&nbsp;&nbsp;&nbsp;
+      <label>File: <span id="filenamebox"></span></label>&nbsp;&nbsp;&nbsp;
+      <label><span class="badge" id="nrwords"></span> source words</label>&nbsp;&nbsp;&nbsp;
+      <label><span class="badge" id="nrsegments"></span> segments</label>
+      
+    </nav
+  -->
+
+    <dir-pagination-controls boundary-links="true"></dir-pagination-controls>
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Verse ID</th>
+        <th>Text</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr dir-paginate="segment in segments | filter:search | itemsPerPage: pageSize" current-page="currentPage">
+        <td>{{segment.ID}}</td>
+        <td>{{segment.TEXT}}</td>
+        <td><a href='#/{{segment.ID}}' role="button" class="btn btn-primary btn-sm">show</a></td>
+      </tr>
+    </tbody>
+    </table>
+
+
+   
