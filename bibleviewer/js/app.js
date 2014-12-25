@@ -116,6 +116,12 @@ bibApp.controller('ArticleCtrl', function ($scope, $routeParams, segments){
 
 bibApp.controller('InfoCtrl', function ($scope, $routeParams, segments, $sce){
   $scope.info = metadata; //metadata;
+  var fields = [];
+  metadata.forEach(function(metaline){
+    var cols = metaline.split(": ");
+    fields.push([cols[0].substring(2),cols[1]]);
+  });
+  $scope.fields = fields;
   $scope.filename = filename;
 });
 

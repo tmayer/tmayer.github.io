@@ -5,10 +5,19 @@
 
     <h3>{{filename}}</h3>
     <hr>
-
+<!--
     <div class="alert alert-info" role="alert">
         <div ng-repeat='infoitem in info'>
             <span ng-bind="infoitem"></span>
         </div>
+    </div>
+-->
+
+    <div class="alert alert-info" role="alert">
+        <table class="table table-hover table-bordered">
+        <tr ng-repeat='field in fields'>
+            <td width="200">{{field[0]}}</td><td>{{field[1]}}</td>
+        </tr>
+        </table>
     </div>
 
