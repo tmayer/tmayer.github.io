@@ -1,6 +1,6 @@
 //'use strict';
 
-var bibApp = angular.module('tutorialApp', ['ngRoute']);
+var bibApp = angular.module('tutorialApp', ['ngRoute','ngSanitize']);
 
 var xliffdata = "";
 var globalsegments = [];

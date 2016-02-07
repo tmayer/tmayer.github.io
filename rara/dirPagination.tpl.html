@@ -1,0 +1,44 @@
+
+<div class="row">
+
+<div class="col-xs-4">
+<form class="form-inline" ng-if="1 < pages.length">
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-addon">Jump to entry</div>
+      <input type="text" class="form-control" id="exampleInputAmount" placeholder="number" ng-model="pageNumber" ng-change="setCurrent(pageNumber);">
+      <div class="input-group-addon">&nbsp;</div>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="col-lg-8" style="top: -20px;">
+<ul class="pagination" ng-if="1 < pages.length">
+    <li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }">
+        <a href="" ng-click="setCurrent(1)">&laquo;</a>
+    </li>
+    <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
+        <a href="" ng-click="setCurrent(pagination.current - 1)" class="ng-binding">‹</a>
+    </li>
+
+
+
+    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+        <a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a>
+    </li>
+
+
+    <li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
+        <a href="" ng-click="setCurrent(pagination.current + 1)" class="ng-binding">›</a>
+    </li>
+    <li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }">
+        <a href="" ng-click="setCurrent(pagination.last)">&raquo;</a>
+    </li>
+
+</ul>
+</div>
+
+
+
+</div>

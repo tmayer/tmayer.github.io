@@ -1,0 +1,92 @@
+
+
+<div class="row">
+
+  <div class="col-lg-4">
+  <form class="form-inline">
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon">Quick Search</div>
+        <input type="text" class="form-control" placeholder="word(s) in entries" ng-model="search">
+        <div class="input-group-addon">&nbsp;</div>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
+
+
+
+    <dir-pagination-controls boundary-links="true"></dir-pagination-controls>
+
+
+  <div class="tableborder">
+    <table class="table table-hover table-condensed table-striped">
+    <tbody dir-paginate="verse in verses | filter:search | itemsPerPage: pageSize" current-page="currentPage">
+      <tr>
+        <td>Number</td>
+        <td>{{verse.ID}}</td>
+      </tr>
+      <tr>
+        <td>Original</td>
+        <td ng-bind-html="verse.original"></td>
+      </tr>
+      <tr>
+        <td>Standardized</td>
+        <td ng-bind-html="verse.standardized"></td>
+      </tr>
+      <tr>
+        <td>Formula</td>
+        <td ng-bind-html="verse.formula"></td>
+      </tr>
+      <tr>
+        <td>Keywords</td>
+        <td ng-bind-html="verse.keywords"></td>
+      </tr>
+      <tr>
+        <td>Domain</td>
+        <td ng-bind-html="verse.domain"></td>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td ng-bind-html="verse.type"></td>
+      </tr>
+      <tr>
+        <td>Status</td>
+        <td ng-bind-html="verse.status"></td>
+      </tr>
+      <tr>
+        <td>Quality</td>
+        <td ng-bind-html="verse.quality"></td>
+      </tr>
+      <tr>
+        <td>Basis</td>
+        <td ng-bind-html="verse.basis"></td>
+      </tr>
+      <tr>
+        <td>Source</td>
+        <td ng-bind-html="verse.source"></td>
+      </tr>
+    </tbody>
+    </table>
+  </div>
+
+<!-- old for more than one entry per page 
+    <table class="table table-hover table-condensed">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Phenomenon</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr dir-paginate="verse in verses | filter:search | itemsPerPage: pageSize" current-page="currentPage">
+        <td style="text-align: right;">{{verse.ID}}</td>
+        <td ng-bind-html="verse.original"></td>
+        <td><a href='#/{{verse.ID}}' role="button" class="btn btn-primary btn-sm">show</a></td>
+      </tr>
+    </tbody>
+    </table>
+-->
+
