@@ -178,7 +178,7 @@ header {
     min-height: auto;
     text-align: center;
     color: #fff;
-    background-image: url(../img/bilder/aussenansicht.jpg);
+    background-image: url(../img/bilder/aussenansicht7.jpg);
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -190,6 +190,7 @@ header .header-content {
     position: relative;
     width: 100%;
     padding: 100px 15px;
+    margin-top: 200px;
     text-align: center;
 }
 
@@ -274,7 +275,7 @@ header .header-content .header-content-inner p {
     text-align: center;
     color: #fff;
     opacity: 0;
-    background: rgba(240,95,64,.9);
+    background: rgba(240,95,64,.2);
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
@@ -473,4 +474,9 @@ img::-moz-selection {
 
 body {
     webkit-tap-highlight-color: #222;
+}
+
+#map {
+    width: 100%;
+    height: 720px;
 }

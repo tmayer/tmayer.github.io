@@ -17,6 +17,7 @@
     <!-- Custom Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css">
 
     <!-- Plugin CSS -->
@@ -24,6 +25,9 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/creative.css" type="text/css">
+
+    <!-- Leaflet Map -->
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,16 +57,16 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="#about">Informationen</a>
+                        <a class="page-scroll" href="#info">Informationen</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Bilder</a>
+                        <a class="page-scroll" href="#bilder">Bilder</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#portfolio">Lage</a>
+                        <a class="page-scroll" href="#kontakt">Kontakt</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact">Kontakt</a>
+                        <a class="page-scroll" href="#map">Lage</a>
                     </li>
                 </ul>
             </div>
@@ -74,22 +78,41 @@
     <header>
         <div class="header-content">
             <div class="header-content-inner">
-                <h1>Your Favorite Source of Free Bootstrap Themes</h1>
-                <hr>
-                <p>Start Bootstrap can help you build better websites using the Bootstrap CSS framework! Just download your template and start going, no strings attached!</p>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
+                <h1>Genießen und Relaxen <br>am Bodensee</h1>
+                <!--hr-->
+                <p></p>
+                <!--a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a-->
+                <p>
+                    <i class="fa fa-4x fa-arrow-down wow bounceIn text-primary" data-wow-delay=".3s" style='color: white; margin-top:20px;'></i>
+                </p>
             </div>
         </div>
     </header>
 
-    <section class="bg-primary" id="about">
+    <section class="bg-primary" id="info">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">We've got what you need!</h2>
+                    <h2 class="section-heading">Wir haben die perfekte Ferienunterkunft für Ihren Erholungsurlaub!</h2>
                     <hr class="light">
-                    <p class="text-faded">Start Bootstrap has everything you need to get your new website up and running in no time! All of the templates and themes on Start Bootstrap are open source, free to download, and easy to use. No strings attached!</p>
-                    <a href="#" class="btn btn-default btn-xl">Get Started!</a>
+                    <p class="text-faded">
+                        Unsere neue und helle FeWo liegt in einem ruhigen Wohngebiet mit Teil- See/Alpenblick. <br><br>
+                        Unsere FeWo verfügt über 1 Wohn/Essraum,
+                        2 Doppelschlafzimmer, Küche, Bad/WC sowie Balkon zur
+                        Süd und Westseite.
+                        Sollten Sie die Großeltern mitbringen wollen, steht noch
+                        ein 3. Schlafzimmer mit Dusche zur Verfügung. <br><br>
+                        In nur 3 Gehminuten sind Sie am See und im See- und Hallenbad.
+                        Auto/Fahrradabstellplatz ist vorhanden.
+                        Einkaufsmöglichkeiten, Restaurants, Minigolf, Schiffsanlegestelle usw. sind in wenigen Minuten erreichbar.<br><br>
+                        Die Preise 65.-- bis 85.-- € je nach Saison sind für 2 Erw., Kinder ab 7 Jahren 8.-- bis 10.--€/Nacht<br><br>
+                        Anreise: 14.00 - 16.00 h Abreise: bis 10.00 h<br><br>
+                        Wir würden uns sehr freuen Sie in unserer FeWo begrüßen
+                        zu dürfen.
+                        Wir empfehlen eine Reiserücktrittversicherung
+
+                    </p>
+                    <a href="#kontakt" class="btn btn-default btn-xl page-scroll">Melden Sie sich bei uns!</a>
                 </div>
             </div>
         </div>
@@ -99,46 +122,60 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">At Your Service</h2>
-                    <hr class="primary">
+                    <h2 class="section-heading"></h2>
+                    <!--hr class="primary"-->
                 </div>
             </div>
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-6 text-center">
+                <div class="col-lg-2 col-md-4 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-diamond wow bounceIn text-primary"></i>
-                        <h3>Sturdy Templates</h3>
-                        <p class="text-muted">Our templates are updated regularly so they don't break.</p>
+                        <i class="fa fa-4x fa-child wow bounceIn text-primary"></i>
+                        <h3>Familien-<br>freundlich</h3>
+                        <p class="text-muted">Schaukel und Rutsche im Garten. Spielplatz direkt nebenan.</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 text-center">
+                <div class="col-lg-2 col-md-4 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-paper-plane wow bounceIn text-primary" data-wow-delay=".1s"></i>
-                        <h3>Ready to Ship</h3>
-                        <p class="text-muted">You can use this theme as is, or you can make changes!</p>
+                        <i class="fa fa-4x fa-shopping-cart wow bounceIn text-primary" data-wow-delay=".1s"></i>
+                        <h3>Einkaufen in der Nähe</h3>
+                        <p class="text-muted">Tankstelle und Supermarkt nur ein paar Straßen weiter</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 text-center">
+                <div class="col-lg-2 col-md-4 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-newspaper-o wow bounceIn text-primary" data-wow-delay=".2s"></i>
-                        <h3>Up to Date</h3>
-                        <p class="text-muted">We update dependencies to keep things fresh.</p>
+                        <i class="fa fa-4x fa-wifi wow bounceIn text-primary" data-wow-delay=".2s"></i>
+                        <h3>Kostenloser Internetzugang</h3>
+                        <p class="text-muted">Seien Sie auch im Urlaub online.</p>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 text-center">
+                <div class="col-lg-2 col-md-4 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-bullseye wow bounceIn text-primary" data-wow-delay=".3s"></i>
+                        <h3>Nahe zum Zentrum</h3>
+                        <p class="text-muted">Nur 5 Gehminuten zum Strandbad Immenstaad!</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 text-center">
+                    <div class="service-box">
+                        <i class="fa fa-4x fa-car wow bounceIn text-primary" data-wow-delay=".2s"></i>
+                        <h3>Kostenloser Parkplatz</h3>
+                        <p class="text-muted">Parken Sie bei uns direkt am Haus.</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 text-center">
                     <div class="service-box">
                         <i class="fa fa-4x fa-heart wow bounceIn text-primary" data-wow-delay=".3s"></i>
-                        <h3>Made with Love</h3>
-                        <p class="text-muted">You have to make your websites with love these days!</p>
+                        <h3>Gastfreundlich</h3>
+                        <p class="text-muted">Genießen Sie Ihren Urlaub in freundlicher Atmosphäre!</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="no-padding" id="portfolio">
+    <section class="no-padding" id="bilder">
         <div class="container-fluid">
             <div class="row no-gutter">
                 <div class="col-lg-4 col-sm-6">
@@ -147,10 +184,10 @@
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Wohnzimmer
                                 </div>
                             </div>
                         </div>
@@ -162,10 +199,10 @@
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Wohnzimmer
                                 </div>
                             </div>
                         </div>
@@ -177,10 +214,10 @@
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Schlafzimmer Kinder
                                 </div>
                             </div>
                         </div>
@@ -192,10 +229,10 @@
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Schlafzimmer 1
                                 </div>
                             </div>
                         </div>
@@ -207,10 +244,10 @@
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Badezimmer
                                 </div>
                             </div>
                         </div>
@@ -218,14 +255,58 @@
                 </div>
                 <div class="col-lg-4 col-sm-6">
                     <a href="#" class="portfolio-box">
-                        <img src="img/bilder/istaad2.jpg" class="img-responsive" alt="">
+                        <img src="img/bilder/garten.jpg" class="img-responsive" alt="">
                         <div class="portfolio-box-caption">
                             <div class="portfolio-box-caption-content">
                                 <div class="project-category text-faded">
-                                    Category
+
                                 </div>
                                 <div class="project-name">
-                                    Project Name
+                                    Garten mit Schaukel und Rutsche
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div><div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/bilder/schlafzimmer3.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+
+                                </div>
+                                <div class="project-name">
+                                    Schlafzimmer 2
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/bilder/aussicht.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+
+                                </div>
+                                <div class="project-name">
+                                    Aussicht vom Balkon
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <a href="#" class="portfolio-box">
+                        <img src="img/bilder/kueche.jpg" class="img-responsive" alt="">
+                        <div class="portfolio-box-caption">
+                            <div class="portfolio-box-caption-content">
+                                <div class="project-category text-faded">
+
+                                </div>
+                                <div class="project-name">
+                                    Küche
                                 </div>
                             </div>
                         </div>
@@ -235,34 +316,32 @@
         </div>
     </section>
 
-    <aside class="bg-dark">
-        <div class="container text-center">
-            <div class="call-to-action">
-                <h2>Free Download at Start Bootstrap!</h2>
-                <a href="#" class="btn btn-default btn-xl wow tada">Download Now!</a>
-            </div>
-        </div>
-    </aside>
 
-    <section id="contact">
+
+    <section id="kontakt">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Let's Get In Touch!</h2>
+                    <h2 class="section-heading">Melden Sie sich einfach bei uns!</h2>
                     <hr class="primary">
-                    <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                    <p>Rufen Sie einfach bei uns an oder schreiben Sie eine Mail. Wir freuen uns auf ihre Anfrage!</p>
                 </div>
                 <div class="col-lg-4 col-lg-offset-2 text-center">
                     <i class="fa fa-phone fa-3x wow bounceIn"></i>
-                    <p>123-456-6789</p>
+                    <p>07545/9499177</p>
                 </div>
                 <div class="col-lg-4 text-center">
                     <i class="fa fa-envelope-o fa-3x wow bounceIn" data-wow-delay=".1s"></i>
-                    <p><a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a></p>
+                    <p><a href="mailto:Sieglinde.Mayer@gmail.com">Sieglinde.Mayer@gmail.com</a></p>
                 </div>
             </div>
         </div>
     </section>
+
+    <section id="map">
+
+    </section>
+
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
@@ -277,6 +356,21 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="js/creative.js"></script>
+
+    <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA"></script>
+
+    <!-- Google Maps Script -->
+    <script src="js/hersbergblick.js"></script>
+
+    <!-- Leaflet code -->
+    <!--script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script-->
+
+    <!--script type="text/javascript">
+
+        var mymap = L.map('map').setView([51.505, -6.09], 13);
+
+    </script-->
 
 </body>
 
