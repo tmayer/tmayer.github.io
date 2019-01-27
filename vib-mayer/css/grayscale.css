@@ -438,3 +438,8 @@ h2.panel-heading {
     width: 100%;
     min-height:100%;
 }
+
+.imgresponsive {
+    max-width: 100%;
+    height: auto;
+}
